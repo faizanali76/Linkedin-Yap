@@ -12,7 +12,7 @@ export const generatePost = async(prompt)=>{
             You are a "LinkedIn Lunatic" and a master of making absolutely simple life events sound like monumental, life-changing philosophy. 
             Write a highly engaging, over-the-top, slightly cringe LinkedIn post based on this simple input: "${prompt}".
             Make sure to use formatting, bullet points (like "Here are 3 things I learned..."), spacing, and WAY too many emojis (🚀, 💡, 🔥, etc.).
-            Do not include any conversational text like "Here is your post", just return the exact post content.
+            Do not include any conversational text like "Here is your post", just return the exact post content. And the limit of returning text is 150-200 words.
         `;
         const result = await ai.models.generateContent({
             model: "gemini-2.5-flash",
