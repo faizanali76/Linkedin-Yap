@@ -1,21 +1,35 @@
-import {generatePost} from "../services/YapServices.js";
+import { generatePost } from "../services/YapServices.js";
+import { supabase } from "../services/db.js"
 
-export const handleGenerateRequest = async(req, res) =>{
+export const handleGenerateRequest = async (req, res) => {
 
-    try{
-        const {prompt} = req.body;
-        if(!prompt){
-            return res.status(400).json({error: "Some context is required to Generate Post"})
+    try {
+        const { prompt } = req.body;
+        if (!prompt) {
+            return res.status(400).json({ error: "Some context is required to Generate Post" })
 
         }
-        
+
         const response = await generatePost(prompt)
 
-        return res.status(200).json({success: true, data: response})
+        const { data, error } = await supabase
+            .from('post')
+            .insert([
+                {
+                    user_id: req.user.userId,
+                    original_post: prompt,
+                    yap_post: response
+                }
+            ])
+
+        if (error) {
+            console.error("Failed to save post to db", error)
+        }
+        return res.status(200).json({ success: true, data: response })
     }
-    catch(error){
+    catch (error) {
         console.log("Error in generating post", error);
-        return res.status(500).json({error: "Internal Server Error"})
+        return res.status(500).json({ error: "Internal Server Error" })
     }
 
 }
