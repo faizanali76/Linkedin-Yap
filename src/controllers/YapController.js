@@ -33,3 +33,28 @@ export const handleGenerateRequest = async (req, res) => {
     }
 
 }
+
+
+export const handleGetHistory = async (req, res) =>{
+
+    try{
+    const {data, error} = await supabase
+    .from('post')
+    .select('*')
+    .eq('user_id', req.user.userId)
+    .order('created_at', {ascending: false})
+
+    if(error){
+        console.error("Failed to fetch history", error)
+        return res.status(500).json({error:"Failed to fetch history"})
+
+    }
+
+    return res.status(200).json({success:true, data: data})
+}
+catch(error){
+    console.error("Error in Fetching History", error)
+    return res.status(500).json({error: "Internal Server Error"})
+}
+    
+}
